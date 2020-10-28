@@ -22,7 +22,7 @@ Serial.begin (9600);
 
 void loop() {
   buttonState=digitalRead(enc_sw_button);    //Read the switch Button Position of encoder
-     Serial.print("kdjk");
+     Serial.print("kdj");
     if(buttonState!=lastButton_state){       //Change buttonState once when Button is pressed
      
       if(buttonState==true){
