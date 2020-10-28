@@ -58,10 +58,11 @@ pinMode(ledYellow_pin,OUTPUT);
 }
 
 void loop() {
-    testdrawstyles();    // Draw 'stylized' characters
-    delay(2000);
+  tempLoop();
+  wemoLoop();
 }
-void testdrawstyles(void) {
+
+void tempLoop() {
   display.clearDisplay();
   display.setTextSize(1);             // Normal 1:1 pixel scale
   display.setRotation(0);             //direction screen shows characters
@@ -79,7 +80,7 @@ void testdrawstyles(void) {
       //display.printf("Weather is cold at %0.2f \n",tempC_F);
       display.printf("Weather is cold at %0.2f \n",tempC_F);
     }
-    else if(tempC>=72.0){
+    else if(tempC_F>=80.0){
       digitalWrite(ledRed_pin,HIGH);
       digitalWrite(ledBlue_pin,LOW);
       digitalWrite(ledClear_pin,LOW);
@@ -93,4 +94,8 @@ void testdrawstyles(void) {
     }
 
   display.display();
+}
+
+void wemoLoop(){
+  
 }
