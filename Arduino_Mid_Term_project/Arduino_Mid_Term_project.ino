@@ -8,11 +8,12 @@
 #include <Encoder.h>
 
 bool buttonState;
+bool lastButton_state;
 
-const int enc_PinA=2;
-const int enc_PinB=3;
+const int enc_PinA=1;
+const int enc_PinB=0;
 Encoder myEnc(enc_PinB,enc_PinA);
-const int encoder_sw_button=23;   // encoder switch connected to digital pin 23
+const int enc_sw_button=23;   // encoder switch connected to digital pin 23
 
 void setup() {
 Serial.begin (9600);
@@ -20,12 +21,15 @@ Serial.begin (9600);
 }
 
 void loop() {
-  buttonState=digitalRead(BUTTON_PIN);    //Read the switch Button Position of encoder
-    if(buttonState!=lastButton){          //Change pixelState once when Button is pressed
+  buttonState=digitalRead(enc_sw_button);    //Read the switch Button Position of encoder
+     Serial.print("kdjks");
+    if(buttonState!=lastButton_state){       //Change buttonState once when Button is pressed
+     
       if(buttonState==true){
-        pixelState=!pixelState;
+        
+        //pixelState=!pixelState;
       }
-        lastButton=buttonState;
-    }
+        lastButton_state=buttonState;
+   }
 
 }
