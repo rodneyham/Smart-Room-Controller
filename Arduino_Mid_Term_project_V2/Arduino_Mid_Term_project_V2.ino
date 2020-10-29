@@ -28,9 +28,6 @@ const int ledBlue_pin=3;
 const int ledYellow_pin=2;
 
 //oneButton_Array()
-OneButton button1(buttonpin,false,false);
-
-//oneButton_Array()
 
 
 //Ethernet
@@ -41,7 +38,7 @@ OneButton button1(buttonpin,false,false);
 
 //Wemo
 bool wemoON;
-const int wemo_enc_sw_button=23;     // encoder switch connected to digital pin 23)
+const int enc_sw_button=23;     // encoder switch connected to digital pin 23)
 bool wemo_buttonState;
 bool wemo_lastButton;
 //wemo
@@ -55,10 +52,14 @@ long duration;    // variable for the duration of sound wave travel
 int distance;     // variable for the distance measurement
 //Ultrasonic Sensor
 
+//oneButton_Array()
+//OneButton the_red_button(buttonRed,false,false);
+OneButton encoder_sw(enc_sw_button,false,false);
+//oneButton_Array()
+
 const int enc_PinA=1;
 const int enc_PinB=0;
 Encoder myEnc(enc_PinB,enc_PinA);
-const int enc_sw_button=23;   // encoder switch connected to digital pin 23 used in: oneButton_Array()
 
 int tempRange;
 
@@ -86,13 +87,8 @@ void setup() {
     }
 
   //oneButton_array()
-  button1.attachClick(click1);
-  button1.attachDoubleClick(doubleclick1);
-  button1.attachLongPressStart(longPressStart1);
-  button1.attachLongPressStop(longPressStop1);
-  button1.setClickTicks(250);
-  button1.setPressTicks(2000);
-
+  //the_red_button.attachClick(sonarLoop);
+  encoder_sw.attachClick(oneButton_Array);
   
   //Ethernet
  pinMode(10, OUTPUT);
@@ -133,14 +129,17 @@ void setup() {
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 void loop() {
+  //the_red_button.tick();   //check the state of the button
+  encoder_sw.tick();   //check the state of the encoder switch button
+  
   //tempLoop();
   //wemoLoop();
-  //sonarLoop();
+ sonarLoop();
   //lightLoop();
-    oneButton_Array();
 }
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 void oneButton_Array(){
+
   
 }
 void tempLoop() {
@@ -178,7 +177,7 @@ void tempLoop() {
 }
 
 void wemoLoop(){
-    wemo_buttonState=digitalRead(wemo_enc_sw_button);    //Read the switch Button Position of encoder
+    wemo_buttonState=digitalRead(enc_sw_button);    //Read the switch Button Position of encoder
     if(wemo_buttonState!=wemo_lastButton){          //Change buttonState once when Button is pressed
       wemo_lastButton=wemo_buttonState;
       
