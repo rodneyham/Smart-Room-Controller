@@ -126,18 +126,32 @@ void setup() {
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 void loop() {
+  switch (mode){
+    case 0:
+      sonarLoop();
+      break;
+    case 1:
+      tempLoop();
+      break;
+    case 2:
+      wemoLoop();
+      break;
+    case 3:
+      lightLoop();
+      break;       
+  }
   //the_red_button.tick();   //check the state of the button
   encoder_sw.tick();   //check the state of the encoder switch button
   
   //tempLoop();
   //wemoLoop();
- sonarLoop();
+ //sonarLoop();
   //lightLoop();
 }
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 void oneButton_Array(){
   Serial.printf ("mode is click no. %i \n", mode);
-  if(mode>=2){
+  if(mode>=3){
     mode=0;
   }
     else {
@@ -145,6 +159,7 @@ void oneButton_Array(){
     }
  }
 void tempLoop() {
+  Serial.printf("temp mode");
   display.clearDisplay();
   display.setTextSize(1);             // Normal 1:1 pixel scale
   display.setRotation(0);             //direction screen shows characters
@@ -179,15 +194,8 @@ void tempLoop() {
 }
 
 void wemoLoop(){
-    wemo_buttonState=digitalRead(enc_sw_button);    //Read the switch Button Position of encoder
-    if(wemo_buttonState!=wemo_lastButton){          //Change buttonState once when Button is pressed
-      wemo_lastButton=wemo_buttonState;
-      
-      if(wemo_buttonState==true){
-        wemoON=!wemoON;
-      }
-    }
-      if(wemoON==true){
+  Serial.println("wemo mode");
+      if(mode==2){
         switchON(0);
         delay(2000);
         switchON(1);
@@ -204,7 +212,7 @@ void wemoLoop(){
       }   
 }
 void sonarLoop(){
-
+    Serial.println("sonar mode");
   //"When red button pressed & held sonar sensor cycles & LED flashes for each cycle"
   
   val_buttonRed=digitalRead(buttonRed);
@@ -230,5 +238,5 @@ void sonarLoop(){
   }
 }
 void lightLoop(){
-  
+  Serial.println("light mode");
 }
