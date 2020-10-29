@@ -23,6 +23,13 @@ const int ledClear_pin=4;
 const int ledBlue_pin=3;
 const int ledYellow_pin=2;
 
+//Ultrasonic Sensor
+const int echoPin=7; // attach digital pin Echo of HC-SR04
+const int trigPin=8; //attach digital pin Trig of HC-SR04
+bool buttonRed;      //press red button to turn on ultrasonic sensor
+int long_duration;  // variable for the duration of sound wave travel
+int dist_measure;   // variable for the distance measurement
+
 const int enc_PinA=1;
 const int enc_PinB=0;
 Encoder myEnc(enc_PinB,enc_PinA);
@@ -51,15 +58,22 @@ void setup() {
     Serial.print("initialization failed");
     }
 
-pinMode(ledRed_pin,OUTPUT);     //set LED pin to Output
-pinMode(ledClear_pin,OUTPUT);
-pinMode(ledBlue_pin,OUTPUT);
-pinMode(ledYellow_pin,OUTPUT);
+  pinMode(ledRed_pin,OUTPUT);     //set LED pin to Output
+  pinMode(ledClear_pin,OUTPUT);
+  pinMode(ledBlue_pin,OUTPUT);
+  pinMode(ledYellow_pin,OUTPUT);
+
+  //Ultrasonic Sensor
+  pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
+  pinMode(echoPin, INPUT); // Sets the echoPin as an INPUT
+  pinMode(buttonRed,INPUT); //when button is pressed the pin goes low
 }
 
 void loop() {
   tempLoop();
   wemoLoop();
+  sonarLoop();
+  lightLoop();
 }
 
 void tempLoop() {
@@ -97,5 +111,11 @@ void tempLoop() {
 }
 
 void wemoLoop(){
+  
+}
+void sonarLoop(){
+  
+}
+void lightLoop(){
   
 }
