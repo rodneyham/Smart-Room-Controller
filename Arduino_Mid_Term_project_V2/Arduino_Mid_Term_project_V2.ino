@@ -119,6 +119,9 @@ void wemoLoop(){
   
 }
 void sonarLoop(){
+
+  //"When red button pressed & held sonar sensor cycles & LED flashes for each cycle"
+  
   val_buttonRed=digitalRead(buttonRed);
   if(val_buttonRed){
   delay(1000); // Execute once per second 
