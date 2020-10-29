@@ -137,6 +137,8 @@ void sonarLoop(){
   
   distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
   Serial.printf("Time %i, Distance: %i, Duration %i \n",millis(),distance, duration);
+  
+  digitalWrite(ledYellow_pin,LOW);
   }
 }
 void lightLoop(){
