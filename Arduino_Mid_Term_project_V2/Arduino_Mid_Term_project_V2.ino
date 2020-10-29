@@ -168,15 +168,18 @@ void wemoLoop(){
       }
     }
       if(wemoON==true){
-//        switchON(0);
-//        switchON(1);
-//        switchON(2);
+        switchON(0);
+        delay(2000);
+        switchON(1);
+        delay(2000);
+        switchON(2);
+        delay(2000);
         switchON(3);
       }
       else{
-//        switchOFF(0);
-//        switchOFF(1);
-//        switchOFF(2);
+        switchOFF(0);
+        switchOFF(1);
+        switchOFF(2);
         switchOFF(3);
       }   
 }
