@@ -82,7 +82,7 @@ void setup() {
     }
 
   //oneButton_array
-  mode=0;
+  mode=4;
   //the_red_button.attachClick(sonarLoop);
   encoder_sw.attachClick(oneButton_Array);
   
@@ -137,8 +137,11 @@ void loop() {
       wemoLoop();
       break;
     case 3:
+      wemoLoop();    //this mode is no longer to 2 so it will shut them off
       lightLoop();
-      break;       
+      break; 
+    case 4:  
+      break;    
   }
   //the_red_button.tick();   //check the state of the button
   encoder_sw.tick();   //check the state of the encoder switch button
@@ -151,7 +154,7 @@ void loop() {
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 void oneButton_Array(){
   Serial.printf ("mode is click no. %i \n", mode);
-  if(mode>=3){
+  if(mode>=4){
     mode=0;
   }
     else {
@@ -194,14 +197,11 @@ void tempLoop() {
 }
 
 void wemoLoop(){
-  Serial.println("wemo mode");
+  Serial.println("wemo mode jkhuyuyyvtrcyute");
       if(mode==2){
         switchON(0);
-        delay(2000);
-        switchON(1);
-        delay(2000);
+        //switchON(1);
         switchON(2);
-        delay(2000);
         switchON(3);
       }
       else{
