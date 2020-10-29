@@ -6,8 +6,11 @@
 */
 
 #include <Encoder.h>
+#include <Ethernet.h>
+#include <mac.h>
 #include <SPI.h>
 #include <Wire.h>
+#include <wemo.h>
 #include <Adafruit_BME280.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
@@ -23,20 +26,34 @@ const int ledClear_pin=4;
 const int ledBlue_pin=3;
 const int ledYellow_pin=2;
 
+
+//Ethernet
+  EthernetClient client;
+  bool status;
+//Ethernet
+
+
+//Wemo
+bool wemoON;
+const int wemo_enc_sw_button=23;     // encoder switch connected to digital pin 23)
+bool wemo_buttonState;
+bool wemo_lastButton;
+//wemo
+
 //Ultrasonic Sensor
-const int echoPin=7; // attach digital pin Echo of HC-SR04
-const int trigPin=8; //attach digital pin Trig of HC-SR04
+const int echoPin=7;        // attach digital pin Echo of HC-SR04
+const int trigPin=8;        //attach digital pin Trig of HC-SR04
 const int buttonRed=6;      //press red button to turn on ultrasonic sensor
 int val_buttonRed;
 long duration;    // variable for the duration of sound wave travel
 int distance;     // variable for the distance measurement
+//Ultrasonic Sensor
 
 const int enc_PinA=1;
 const int enc_PinB=0;
 Encoder myEnc(enc_PinB,enc_PinA);
 const int enc_sw_button=23;   // encoder switch connected to digital pin 23
 
-int status;
 int tempRange;
 
 float tempC;
@@ -49,6 +66,7 @@ float tempC_F;
 #define OLED_RESET     14 // Reset pin # (or -1 if sharing Arduino reset pin)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   
 void setup() {
   Serial.begin (9600);
@@ -60,7 +78,29 @@ void setup() {
     if(status==false){
     Serial.print("initialization failed");
     }
+  //Ethernet
+ pinMode(10, OUTPUT);
+ digitalWrite(10,HIGH);
 
+  //wemo
+  wemo_lastButton=false;
+  
+  //Start ethernet connection
+  status = Ethernet.begin(mac);
+  if (!status) {
+    Serial.println("failed to configure Ethernet using DHCP");
+    //no point in continueing 
+    while(1);
+    }
+  //print your local IP address
+  Serial.print("My IP address:");
+  for (byte thisbyte = 0; thisbyte < 4; thisbyte++) {
+    //print value of each byte of the IP address
+    Serial.print(Ethernet.localIP()[thisbyte], DEC);
+    if (thisbyte < 3) Serial.print(".");
+    }
+  Serial.println();
+  
 //these have to deal with temperature
   pinMode(ledRed_pin,OUTPUT);     //set LED pin to Output
   pinMode(ledClear_pin,OUTPUT);
@@ -73,13 +113,15 @@ void setup() {
   pinMode(buttonRed,INPUT); //when button is pressed the pin goes low
   pinMode(ledYellow_pin,OUTPUT);    //light LED when sensor detects something
 }
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 void loop() {
   //tempLoop();
   wemoLoop();
-  sonarLoop();
-  lightLoop();
+  //sonarLoop();
+  //lightLoop();
 }
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 void tempLoop() {
   display.clearDisplay();
@@ -116,7 +158,26 @@ void tempLoop() {
 }
 
 void wemoLoop(){
-  
+    wemo_buttonState=digitalRead(wemo_enc_sw_button);    //Read the switch Button Position of encoder
+    if(wemo_buttonState!=wemo_lastButton){          //Change buttonState once when Button is pressed
+      wemo_lastButton=wemo_buttonState;
+      
+      if(wemo_buttonState==true){
+        wemoON=!wemoON;
+      }
+    }
+      if(wemoON==true){
+//        switchON(0);
+//        switchON(1);
+//        switchON(2);
+        switchON(3);
+      }
+      else{
+//        switchOFF(0);
+//        switchOFF(1);
+//        switchOFF(2);
+        switchOFF(3);
+      }   
 }
 void sonarLoop(){
 
