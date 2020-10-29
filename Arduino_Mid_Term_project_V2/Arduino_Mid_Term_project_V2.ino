@@ -51,7 +51,9 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
   
 void setup() {
   Serial.begin (9600);
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  delay(100);         // wait for Serial Monitor to Open
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); 
+  Serial.println("Ultrasonic Sensor HC-SR04 Test");
 
   status=bme.begin(0x76);
     if(status==false){
@@ -70,7 +72,7 @@ void setup() {
 }
 
 void loop() {
-  tempLoop();
+  //tempLoop();
   wemoLoop();
   sonarLoop();
   lightLoop();
@@ -114,7 +116,21 @@ void wemoLoop(){
   
 }
 void sonarLoop(){
+  delay(1000); // Execute once per second 
   
+  // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds, this is the pulse that will be detected
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  
+  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  Serial.printf("Time %i, Distance: %i, Duration %i \n",millis(),distance, duration);
+
 }
 void lightLoop(){
   
