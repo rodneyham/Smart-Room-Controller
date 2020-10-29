@@ -27,21 +27,15 @@ const int ledClear_pin=4;
 const int ledBlue_pin=3;
 const int ledYellow_pin=2;
 
-//oneButton_Array()
-
-
 //Ethernet
   EthernetClient client;
   bool status;
-//Ethernet
-
 
 //Wemo
 bool wemoON;
 const int enc_sw_button=23;     // encoder switch connected to digital pin 23)
 bool wemo_buttonState;
 bool wemo_lastButton;
-//wemo
 
 //Ultrasonic Sensor
 const int echoPin=7;        // attach digital pin Echo of HC-SR04
@@ -50,9 +44,10 @@ const int buttonRed=6;      //press red button to turn on ultrasonic sensor
 int val_buttonRed;
 long duration;    // variable for the duration of sound wave travel
 int distance;     // variable for the distance measurement
-//Ultrasonic Sensor
 
-//oneButton_Array()
+
+//oneButton_Array
+int mode;
 //OneButton the_red_button(buttonRed,false,false);
 OneButton encoder_sw(enc_sw_button,false,false);
 //oneButton_Array()
@@ -86,9 +81,11 @@ void setup() {
     Serial.print("initialization failed");
     }
 
-  //oneButton_array()
+  //oneButton_array
+  mode=0;
   //the_red_button.attachClick(sonarLoop);
   encoder_sw.attachClick(oneButton_Array);
+  
   
   //Ethernet
  pinMode(10, OUTPUT);
@@ -139,9 +136,14 @@ void loop() {
 }
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 void oneButton_Array(){
-
-  
-}
+  Serial.printf ("mode is click no. %i \n", mode);
+  if(mode>=2){
+    mode=0;
+  }
+    else {
+      mode++;
+    }
+ }
 void tempLoop() {
   display.clearDisplay();
   display.setTextSize(1);             // Normal 1:1 pixel scale
