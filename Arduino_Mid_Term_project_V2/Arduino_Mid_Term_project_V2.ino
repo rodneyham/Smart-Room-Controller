@@ -84,6 +84,7 @@ void setup() {
 
   //wemo
   wemo_lastButton=false;
+  pinMode(enc_sw_button,INPUT);
   
   //Start ethernet connection
   status = Ethernet.begin(mac);
@@ -100,7 +101,7 @@ void setup() {
     if (thisbyte < 3) Serial.print(".");
     }
   Serial.println();
-  
+
 //these have to deal with temperature
   pinMode(ledRed_pin,OUTPUT);     //set LED pin to Output
   pinMode(ledClear_pin,OUTPUT);
