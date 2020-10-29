@@ -11,6 +11,7 @@
 #include <SPI.h>
 #include <Wire.h>
 #include <wemo.h>
+#include <OneButton.h>      //for oneButton_Array()
 #include <Adafruit_BME280.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
@@ -25,6 +26,11 @@ const int ledRed_pin=5;
 const int ledClear_pin=4;
 const int ledBlue_pin=3;
 const int ledYellow_pin=2;
+
+//oneButton_Array()
+OneButton button1(buttonpin,false,false);
+
+//oneButton_Array()
 
 
 //Ethernet
@@ -52,7 +58,7 @@ int distance;     // variable for the distance measurement
 const int enc_PinA=1;
 const int enc_PinB=0;
 Encoder myEnc(enc_PinB,enc_PinA);
-const int enc_sw_button=23;   // encoder switch connected to digital pin 23
+const int enc_sw_button=23;   // encoder switch connected to digital pin 23 used in: oneButton_Array()
 
 int tempRange;
 
@@ -78,6 +84,16 @@ void setup() {
     if(status==false){
     Serial.print("initialization failed");
     }
+
+  //oneButton_array()
+  button1.attachClick(click1);
+  button1.attachDoubleClick(doubleclick1);
+  button1.attachLongPressStart(longPressStart1);
+  button1.attachLongPressStop(longPressStop1);
+  button1.setClickTicks(250);
+  button1.setPressTicks(2000);
+
+  
   //Ethernet
  pinMode(10, OUTPUT);
  digitalWrite(10,HIGH);
@@ -118,12 +134,15 @@ void setup() {
 
 void loop() {
   //tempLoop();
-  wemoLoop();
+  //wemoLoop();
   //sonarLoop();
   //lightLoop();
+    oneButton_Array();
 }
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
+void oneButton_Array(){
+  
+}
 void tempLoop() {
   display.clearDisplay();
   display.setTextSize(1);             // Normal 1:1 pixel scale
