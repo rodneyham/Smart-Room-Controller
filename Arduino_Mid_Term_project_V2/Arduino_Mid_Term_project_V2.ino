@@ -11,6 +11,7 @@
 #include <SPI.h>
 #include <Wire.h>
 #include <wemo.h>
+#include <hue.h>            //This MUST be put AFTER #include <Ethernet.h>
 #include <OneButton.h>      //for oneButton_Array()
 #include <Adafruit_BME280.h>
 #include <Adafruit_GFX.h>
@@ -18,9 +19,6 @@
 Adafruit_BME280 bme;
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
-
-bool buttonState;
-bool lastButton_state;
 
 const int ledRed_pin=5;
 const int ledClear_pin=4;
@@ -31,9 +29,27 @@ const int ledYellow_pin=2;
   EthernetClient client;
   bool status;
 
+//Encoder
+int encPosition;   //for encoder position
+bool buttonState;
+bool lastButton_state;
+const int enc_PinA=1;
+const int enc_PinB=0;
+const int encoderGreen=22;
+const int encoderRed=21;
+const int enc_sw_button=23;     // encoder switch connected to digital pin 23)
+Encoder myEnc(enc_PinB,enc_PinA);
+
+//Hue
+bool HueOn;
+int lightNum;   //light in the classroom to light up
+int HueColor;   //see hue.h
+int HueBright;  //see hue.h
+int maxBrightness=255;
+int minBrightness=0;
+
 //Wemo
 bool wemoON;
-const int enc_sw_button=23;     // encoder switch connected to digital pin 23)
 bool wemo_buttonState;
 bool wemo_lastButton;
 
@@ -51,10 +67,6 @@ int mode;
 //OneButton the_red_button(buttonRed,false,false);
 OneButton encoder_sw(enc_sw_button,false,false);
 //oneButton_Array()
-
-const int enc_PinA=1;
-const int enc_PinB=0;
-Encoder myEnc(enc_PinB,enc_PinA);
 
 int tempRange;
 
@@ -91,9 +103,16 @@ void setup() {
  pinMode(10, OUTPUT);
  digitalWrite(10,HIGH);
 
+  //Hue
+  pinMode(encoderGreen, OUTPUT);
+  pinMode(encoderRed, OUTPUT);
+  HueColor=HueRainbow[5];
+  HueBright=0;
+  lightNum=5;   //lights 1 to 5 in the classroom
+
   //wemo
   wemo_lastButton=false;
-  pinMode(enc_sw_button,INPUT);
+  pinMode(enc_sw_button,INPUT);     //used for wemo, Hue
   
   //Start ethernet connection
   status = Ethernet.begin(mac);
@@ -123,7 +142,6 @@ void setup() {
   pinMode(buttonRed,INPUT); //when button is pressed the pin goes low
   pinMode(ledYellow_pin,OUTPUT);    //light LED when sensor detects something
 }
-//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 void loop() {
   switch (mode){
@@ -138,7 +156,7 @@ void loop() {
       break;
     case 3:
       wemoLoop();    //this mode is no longer to 2 so it will shut them off
-      lightLoop();
+      hueLoop();
       break; 
     case 4:  
       break;    
@@ -149,9 +167,9 @@ void loop() {
   //tempLoop();
   //wemoLoop();
  //sonarLoop();
-  //lightLoop();
+  //hueLoop();
 }
-//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
 void oneButton_Array(){
   Serial.printf ("mode is click no. %i \n", mode);
   if(mode>=4){
@@ -237,6 +255,39 @@ void sonarLoop(){
   digitalWrite(ledYellow_pin,LOW);
   }
 }
-void lightLoop(){
-  Serial.println("light mode");
+void hueLoop(){
+  Serial.println("hue mode");
+  
+    val_buttonRed=digitalRead(buttonRed);
+  if(val_buttonRed){
+      HueOn=!HueOn;
+  }
+// buttonState=digitalRead(enc_sw_button);    //Read the switch Button Position of encoder
+//    if(buttonState!=lastButton_state){          //Change buttonState once when Button is pressed
+//      if(buttonState==true){
+//        HueOn=!HueOn;
+//      }
+//      lastButton_state=buttonState;
+//    }
+    HueBright=myEnc.read();        //read encoder position
+    if(HueBright>maxBrightness){   //if position goes over 255 keep at last position
+      HueBright=(maxBrightness);
+    }
+    if(HueBright<minBrightness){   //if position goes under 0 keep at last position
+      HueBright=(minBrightness);
+    }
+    
+    if(HueOn){                    //Turn on the light when HueOn=true
+      digitalWrite(encoderGreen,LOW);
+      digitalWrite(encoderRed,HIGH);
+      for(int i=0;i<7;i++){
+        setHue(lightNum,HueOn,HueRainbow[i],HueBright);
+      }
+    }
+      else{
+        digitalWrite(encoderGreen,HIGH);
+        digitalWrite(encoderRed,LOW);
+        setHue(lightNum,HueOn,0,0);   //Turn off the light when HueOn=false
+        delay(100);
+      }
 }
