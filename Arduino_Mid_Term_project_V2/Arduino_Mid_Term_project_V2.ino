@@ -52,6 +52,7 @@ int minBrightness=0;
 bool wemoON;
 bool wemo_buttonState;
 bool wemo_lastButton;
+bool wemo_is_on;
 
 //Ultrasonic Sensor
 const int echoPin=7;        // attach digital pin Echo of HC-SR04
@@ -215,18 +216,21 @@ void tempLoop() {
 }
 
 void wemoLoop(){
-  Serial.println("wemo mode jkhuyuyyvtrcyute");
       if(mode==2){
         switchON(0);
-        //switchON(1);
+        switchON(1);
         switchON(2);
         switchON(3);
+        wemo_is_on=true;
       }
       else{
-        switchOFF(0);
-        switchOFF(1);
-        switchOFF(2);
-        switchOFF(3);
+        if(wemo_is_on==true) {    //if wemo is on turn it off just one time
+          switchOFF(0);
+          switchOFF(1);
+          switchOFF(2);
+          switchOFF(3);
+          wemo_is_on=false;
+        }
       }   
 }
 void sonarLoop(){
@@ -262,13 +266,6 @@ void hueLoop(){
   if(val_buttonRed){
       HueOn=!HueOn;
   }
-// buttonState=digitalRead(enc_sw_button);    //Read the switch Button Position of encoder
-//    if(buttonState!=lastButton_state){          //Change buttonState once when Button is pressed
-//      if(buttonState==true){
-//        HueOn=!HueOn;
-//      }
-//      lastButton_state=buttonState;
-//    }
     HueBright=myEnc.read();        //read encoder position
     if(HueBright>maxBrightness){   //if position goes over 255 keep at last position
       HueBright=(maxBrightness);
