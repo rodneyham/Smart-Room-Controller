@@ -147,16 +147,15 @@ void setup() {
 void loop() {
   switch (mode){
     case 0:
-      sonarLoop();
-      break;
-    case 1:
-      tempLoop();
-      break;
-    case 2:
       wemoLoop();
       break;
+    case 1:
+      sonarLoop();
+      break;
+    case 2:
+      tempLoop();
+      break;
     case 3:
-      wemoLoop();    //this mode is no longer to 2 so it will shut them off
       hueLoop();
       break; 
     case 4:  
@@ -217,18 +216,22 @@ void tempLoop() {
 
 void wemoLoop(){
       if(mode==2){
-        switchON(0);
-        switchON(1);
-        switchON(2);
-        switchON(3);
+        switchON(0);    //Turn on flue fan
+        switchON(1);    //Turn on quench fluid pump
+        delay(2000);    //Allow quench tank to refill
+        switchON(2);    //Turn on motor to pressurize the gas
+        delay(1000);    //Reach operating pressure
+        switchON(3);    //Turn on motor to hopper and conveyer
+        delay(2000);    //Furnace reach operating temperature
+        switchON(4);    //
         wemo_is_on=true;
       }
       else{
         if(wemo_is_on==true) {    //if wemo is on turn it off just one time
-          switchOFF(0);
-          switchOFF(1);
-          switchOFF(2);
           switchOFF(3);
+          switchOFF(2);
+          switchOFF(1);
+          switchOFF(0);
           wemo_is_on=false;
         }
       }   
