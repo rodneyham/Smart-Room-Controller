@@ -218,12 +218,9 @@ void wemoLoop(){
       if(mode==2){
         switchON(0);    //Turn on flue fan
         switchON(1);    //Turn on quench fluid pump
-        delay(2000);    //Allow quench tank to refill
         switchON(2);    //Turn on motor to pressurize the gas
-        delay(1000);    //Reach operating pressure
-        switchON(3);    //Turn on motor to hopper and conveyer
-        delay(2000);    //Furnace reach operating temperature
-        switchON(4);    //
+        switchON(3);    //Turn on conveyers
+//        switchON(5);    //Start grinder
         wemo_is_on=true;
       }
       else{
