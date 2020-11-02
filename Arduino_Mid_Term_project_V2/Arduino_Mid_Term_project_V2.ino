@@ -95,7 +95,7 @@ void setup() {
     }
 
   //oneButton_array
-  mode=4;
+  mode=5;
   //the_red_button.attachClick(sonarLoop);
   encoder_sw.attachClick(oneButton_Array);
   
@@ -147,19 +147,20 @@ void setup() {
 void loop() {
   switch (mode){
     case 0:
-      wemoLoop();
+      wemoLoop();         
       break;
     case 1:
-      sonarLoop();
+      wemoLoop();
+      sonarLoop();       
       break;
     case 2:
-      tempLoop();
-      break;
-    case 3:
+      tempLoop();        
+      break; 
+    case 3:  
       hueLoop();
       break; 
-    case 4:  
-      break;    
+    case 4:
+      break;      
   }
   //the_red_button.tick();   //check the state of the button
   encoder_sw.tick();   //check the state of the encoder switch button
@@ -172,7 +173,7 @@ void loop() {
 
 void oneButton_Array(){
   Serial.printf ("mode is click no. %i \n", mode);
-  if(mode>=4){
+  if(mode>=5){
     mode=0;
   }
     else {
@@ -215,7 +216,7 @@ void tempLoop() {
 }
 
 void wemoLoop(){
-      if(mode==2){
+      if(mode==0){
         switchON(0);    //Turn on flue fan
         switchON(1);    //Turn on quench fluid pump
         switchON(2);    //Turn on motor to pressurize the gas
